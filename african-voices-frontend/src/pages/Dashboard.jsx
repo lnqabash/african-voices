@@ -30,7 +30,16 @@ export default function Dashboard() {
       setLoading(true)
       setError(null)
       const data = await dashboardApi.getStats()
-      setStats(data)
+      // Ensure all array fields exist even if API changes
+      setStats({
+        totalStories: data.totalStories ?? 0,
+        languagesRepresented: data.languagesRepresented ?? 0,
+        regionsRepresented: data.regionsRepresented ?? 0,
+        storiesThisMonth: data.storiesThisMonth ?? 0,
+        recentStories: data.recentStories ?? [],
+        storiesByLanguage: data.storiesByLanguage ?? [],
+        storiesByCategory: data.storiesByCategory ?? [],
+      })
     } catch (err) {
       setError(err.message)
     } finally {
@@ -42,6 +51,7 @@ export default function Dashboard() {
 
   if (loading) return <LoadingSpinner message="Loading dashboard…" />
   if (error) return <ErrorMessage message={error} onRetry={load} />
+  if (!stats) return <ErrorMessage message="No data returned from server." onRetry={load} />
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
