@@ -21,8 +21,8 @@ COPY --from=build /app/publish .
 RUN useradd -m appuser && chown -R appuser /app
 USER appuser
 
+# Railway injects $PORT at runtime — ASPNETCORE_URLS is set via environment variable
 EXPOSE 8080
-ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 ENTRYPOINT ["dotnet", "AfricanVoices.API.dll"]
