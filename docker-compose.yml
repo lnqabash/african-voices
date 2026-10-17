@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL Database ───────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: africanvoices-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: africanvoicesdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ChangeMe123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d africanvoicesdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── ASP.NET Core API ──────────────────────────────────────────────────────
+  api:
+    build:
+      context: ./AfricanVoices.API
+      dockerfile: Dockerfile
+    container_name: africanvoices-api
+    restart: unless-stopped
+    ports:
+      - "5000:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=africanvoicesdb;Username=postgres;Password=ChangeMe123;"
+      AzureSpeech__SubscriptionKey: "${AZURE_SPEECH_KEY:-}"
+      AzureSpeech__Region: "${AZURE_SPEECH_REGION:-eastus}"
+      Cors__AllowedOrigins__0: "http://localhost:3000"
+    volumes:
+      - audio_uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── React Frontend ────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./african-voices-frontend
+      dockerfile: Dockerfile
+    container_name: africanvoices-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  audio_uploads:

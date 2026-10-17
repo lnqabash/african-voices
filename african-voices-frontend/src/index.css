@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-primary: #C2570A;
+    --color-primary-dark: #9A4208;
+    --color-accent: #F5A623;
+    --color-earth: #8B4513;
+    --color-sand: #F5DEB3;
+    --color-forest: #2D5016;
+    --color-sky: #1A6B8A;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-stone-50 text-stone-800 font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .gradient-hero {
+    background: linear-gradient(135deg, #C2570A 0%, #8B4513 50%, #2D5016 100%);
+  }
+  .gradient-card {
+    background: linear-gradient(145deg, #FFF8F0 0%, #FFF3E6 100%);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}

@@ -1,0 +1,24 @@
+# ── Secrets ──────────────────────────────────────────────────────────────────
+.env
+*.env.local
+appsettings.Development.json
+appsettings.Production.json
+
+# ── .NET ─────────────────────────────────────────────────────────────────────
+**/bin/
+**/obj/
+**/*.user
+AfricanVoices.API/logs/
+AfricanVoices.API/uploads/
+
+# ── Node ─────────────────────────────────────────────────────────────────────
+african-voices-frontend/node_modules/
+african-voices-frontend/dist/
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.DS_Store
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+docker-compose.override.yml
