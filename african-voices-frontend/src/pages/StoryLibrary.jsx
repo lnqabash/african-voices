@@ -61,7 +61,13 @@ export default function StoryLibrary() {
       const data = hasFilters || query
         ? await storiesApi.search(params)
         : await storiesApi.getAll(page, 12)
-      setResult(data)
+      setResult({
+        items: data.items ?? [],
+        totalCount: data.totalCount ?? 0,
+        page: data.page ?? 1,
+        pageSize: data.pageSize ?? 12,
+        totalPages: data.totalPages ?? 0,
+      })
     } catch (err) {
       setError(err.message)
     } finally {
